@@ -36,3 +36,15 @@ for (const match of matches2) {
 }
 
 console.log(sum2);
+
+const regUniversal = /do(?!n't)\(\)[\s\S]*?(?=don't\(\))/g;
+
+const allMatches = `do()${input}don't()`.match(regUniversal);
+const matches3 = allMatches.toString().matchAll(regex);
+
+let sum3 = 0;
+for (const match of matches3) {
+    sum3 += parseInt(match[1]) * parseInt(match[2]);
+}
+
+console.log(sum3);

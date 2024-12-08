@@ -153,9 +153,9 @@ const part4 = () => {
     }
 
     return (
-      findAnswer(arr, curIndex - 1, curVal, sub) ||
+      findAnswer(arr, curIndex - 1, curVal, split) ||
       findAnswer(arr, curIndex - 1, curVal, div) ||
-      findAnswer(arr, curIndex - 1, curVal, split)
+      findAnswer(arr, curIndex - 1, curVal, sub)
     );
   };
 
@@ -179,9 +179,9 @@ const part4 = () => {
     const result = arr[i][0];
     const items = arr[i][1];
     if (
-      findAnswer(items, items.length - 1, result, sub) ||
+      findAnswer(items, items.length - 1, result, split) ||
       findAnswer(items, items.length - 1, result, div) ||
-      findAnswer(items, items.length - 1, result, split)
+      findAnswer(items, items.length - 1, result, sub)
     ) {
       output.push(result);
     }

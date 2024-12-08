@@ -1,6 +1,6 @@
 use std::{fs, time::Instant};
 
-fn part_1(positions: &Vec<(char, isize, isize)>, input: &String) {
+fn part_1(positions: &Vec<(char, i8, i8)>, input: &String) {
     let mut catchers = Vec::new();
 
     for (i, pos) in positions.iter().enumerate() {
@@ -39,21 +39,10 @@ fn part_1(positions: &Vec<(char, isize, isize)>, input: &String) {
         }
     }
 
-    //for (i, line) in input.lines().enumerate() {
-    //    for (j, char) in line.chars().enumerate() {
-    //        if catchers.contains(&(i as isize, j as isize)) {
-    //            print!("#");
-    //        } else {
-    //            print!("{}", char);
-    //        }
-    //    }
-    //    println!();
-    //}
-
     println!("{}", catchers.len());
 }
 
-fn part_2(positions: &Vec<(char, isize, isize)>, input: &String, i_len: isize, j_len: isize) {
+fn part_2(positions: &Vec<(char, i8, i8)>, i_len: i8, j_len: i8) {
     let mut catchers = Vec::new();
     let start = Instant::now();
 
@@ -99,13 +88,13 @@ fn main() {
     for (i, line) in input.lines().enumerate() {
         for (j, char) in line.chars().enumerate() {
             if char != '.' {
-                positions.push((char, i as isize, j as isize));
+                positions.push((char, i as i8, j as i8));
             }
         }
     }
-    let i_len = input.lines().count() as isize;
-    let j_len = input.lines().nth(0).unwrap().chars().count() as isize;
+    let i_len = input.lines().count() as i8;
+    let j_len = input.lines().nth(0).unwrap().chars().count() as i8;
 
     part_1(&positions, &input);
-    part_2(&positions, &input, i_len, j_len);
+    part_2(&positions, i_len, j_len);
 }

@@ -1,6 +1,6 @@
-use std::fs;
+use std::{fs, time::Instant};
 
-fn part_1(positions: &Vec<(char, usize, usize)>, input: &String) {
+fn part_1(positions: &Vec<(char, isize, isize)>, input: &String) {
     let mut catchers = Vec::new();
 
     for (i, pos) in positions.iter().enumerate() {
@@ -53,52 +53,41 @@ fn part_1(positions: &Vec<(char, usize, usize)>, input: &String) {
     println!("{}", catchers.len());
 }
 
-fn part_2(positions: &Vec<(char, usize, usize)>, input: &String) {
+fn part_2(positions: &Vec<(char, isize, isize)>, input: &String, i_len: isize, j_len: isize) {
     let mut catchers = Vec::new();
+    let start = Instant::now();
 
     for (i, pos) in positions.iter().enumerate() {
         for (j, pos2) in positions.iter().enumerate() {
             if pos.0 == pos2.0 && i != j {
                 // Add current number
-                if !catchers.contains(&(pos.1 as isize, pos.2 as isize)) {
-                    catchers.push((pos.1 as isize, pos.2 as isize));
+                if !catchers.contains(&(pos.1, pos.2)) {
+                    catchers.push((pos.1, pos.2));
                 }
 
                 // Offsets
-                let pos_i_diff = pos.1 as isize - pos2.1 as isize;
-                let pos_j_diff = pos.2 as isize - pos2.2 as isize;
+                let pos_i_diff = pos.1 - pos2.1;
+                let pos_j_diff = pos.2 - pos2.2;
 
-                let mut point_location = (pos_i_diff + pos.1 as isize, pos_j_diff + pos.2 as isize);
+                let mut point_location = (pos_i_diff + pos.1, pos_j_diff + pos.2);
 
-                while point_location.0 as isize >= 0
-                    && point_location.1 as isize >= 0
-                    && (point_location.0 as isize) < input.lines().count() as isize
-                    && (point_location.1 as isize)
-                        < input.lines().nth(0).unwrap().chars().count() as isize
+                while point_location.0 >= 0
+                    && point_location.1 >= 0
+                    && point_location.0 < i_len
+                    && point_location.1 < j_len
                 {
                     if !catchers.contains(&(point_location.0, point_location.1)) {
                         catchers.push((point_location.0, point_location.1));
                     }
-                    point_location = (
-                        pos_i_diff + point_location.0 as isize,
-                        pos_j_diff + point_location.1 as isize,
-                    );
+                    point_location = (pos_i_diff + point_location.0, pos_j_diff + point_location.1);
                 }
             }
         }
     }
 
-    //for (i, line) in input.lines().enumerate() {
-    //    for (j, char) in line.chars().enumerate() {
-    //        if catchers.contains(&(i as isize, j as isize)) {
-    //            print!("#");
-    //        } else {
-    //            print!("{}", char);
-    //        }
-    //    }
-    //    println!();
-    //}
+    let duration = start.elapsed();
 
+    println!("Time: {:?}", duration);
     println!("{}", catchers.len());
 }
 
@@ -110,11 +99,13 @@ fn main() {
     for (i, line) in input.lines().enumerate() {
         for (j, char) in line.chars().enumerate() {
             if char != '.' {
-                positions.push((char, i, j));
+                positions.push((char, i as isize, j as isize));
             }
         }
     }
+    let i_len = input.lines().count() as isize;
+    let j_len = input.lines().nth(0).unwrap().chars().count() as isize;
 
     part_1(&positions, &input);
-    part_2(&positions, &input);
+    part_2(&positions, &input, i_len, j_len);
 }

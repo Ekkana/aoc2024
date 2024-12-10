@@ -1,11 +1,17 @@
-use std::fs;
+use std::{fs, time::Instant};
 
 fn main() {
     let input = fs::read_to_string("input/input1.txt").expect("Smth went wrong");
 
-    solution_2_part1(input.trim_end().to_string());
+    let start = Instant::now();
+    solution_3_part1(input.trim_end().to_string());
+    let duration = start.elapsed();
+    println!("Time: {:?}", duration);
 
-    solution_1_part2(input.trim_end().to_string());
+    let start2 = Instant::now();
+    solution_2_part1(input.trim_end().to_string());
+    let duration2 = start2.elapsed();
+    println!("Time: {:?}", duration2);
 }
 
 fn solution_1_part2(input: String) {
@@ -25,11 +31,7 @@ fn solution_1_part2(input: String) {
         }
     }
 
-    // replace -1 with numbers at the end
-
-    println!("{:?}", result_array);
     for i in 0..result_array.len() {
-        // break if only -1 is at the end of result_array, e.g. [1,2,3,-1,-1]
         if result_array[i] == -1 {
             let mut only_minus_ones = true;
             for j in (i + 1)..result_array.len() {
@@ -52,7 +54,6 @@ fn solution_1_part2(input: String) {
             result_array[i] = result_array[last_number_index];
             result_array[last_number_index] = -1;
         }
-        //println!("{:?}", result_array);
     }
 
     let mut result = 0;
@@ -65,7 +66,50 @@ fn solution_1_part2(input: String) {
     }
 
     println!("{}", result);
-    //println!("{:?}", new_result_array);
+}
+
+fn solution_3_part1(input: String) {
+    let mut result_array: Vec<isize> = Vec::new();
+
+    for i in 0..input.len() {
+        let n_current_char = input.chars().nth(i).unwrap().to_digit(10).unwrap() as usize;
+
+        if i % 2 == 0 {
+            for _ in 0..n_current_char {
+                result_array.push(i as isize / 2);
+            }
+        } else {
+            for _ in 0..n_current_char {
+                result_array.push(-1);
+            }
+        }
+    }
+
+    let mut new_result_array: Vec<isize> = Vec::new();
+    for i in 0..result_array.len() {
+        if result_array[i] != -1 {
+            new_result_array.push(result_array[i]);
+            continue;
+        }
+        for j in (0..result_array.len()).rev() {
+            if j <= i {
+                break;
+            }
+
+            if result_array[j] != -1 {
+                new_result_array.push(result_array[j]);
+                result_array[j] = -1;
+                break;
+            }
+        }
+    }
+
+    let mut result = 0;
+    for i in 0..new_result_array.len() {
+        result += new_result_array[i] as usize * i
+    }
+
+    println!("{}", result);
 }
 
 fn solution_2_part1(input: String) {
@@ -85,11 +129,7 @@ fn solution_2_part1(input: String) {
         }
     }
 
-    // replace -1 with numbers at the end
-
-    println!("{:?}", result_array);
     for i in 0..result_array.len() {
-        // break if only -1 is at the end of result_array, e.g. [1,2,3,-1,-1]
         if result_array[i] == -1 {
             let mut only_minus_ones = true;
             for j in (i + 1)..result_array.len() {
@@ -112,7 +152,6 @@ fn solution_2_part1(input: String) {
             result_array[i] = result_array[last_number_index];
             result_array[last_number_index] = -1;
         }
-        //println!("{:?}", result_array);
     }
 
     let mut result = 0;
@@ -125,7 +164,6 @@ fn solution_2_part1(input: String) {
     }
 
     println!("{}", result);
-    //println!("{:?}", new_result_array);
 }
 
 //fn solution_1(input: String) {

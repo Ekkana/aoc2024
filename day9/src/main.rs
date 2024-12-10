@@ -12,57 +12,99 @@ fn main() {
     solution_2_part1(input.trim_end().to_string());
     let duration2 = start2.elapsed();
     println!("Time: {:?}", duration2);
+
+    let start3 = Instant::now();
+    solution_1_part2(input.trim_end().to_string());
+    let duration3 = start3.elapsed();
+    println!("Time: {:?}", duration3);
 }
 
 fn solution_1_part2(input: String) {
     let mut result_array: Vec<isize> = Vec::new();
+    // startIndex, value, amount
+    let mut together: Vec<(isize, isize, isize)> = Vec::new();
 
     for i in 0..input.len() {
         let n_current_char = input.chars().nth(i).unwrap().to_digit(10).unwrap() as usize;
 
         if i % 2 == 0 {
+            together.push((
+                result_array.len() as isize,
+                i as isize / 2,
+                n_current_char as isize,
+            ));
             for _ in 0..n_current_char {
                 result_array.push(i as isize / 2);
             }
         } else {
+            together.push((result_array.len() as isize, -1, n_current_char as isize));
             for _ in 0..n_current_char {
                 result_array.push(-1);
             }
         }
     }
 
-    for i in 0..result_array.len() {
-        if result_array[i] == -1 {
-            let mut only_minus_ones = true;
-            for j in (i + 1)..result_array.len() {
-                if result_array[j] != -1 {
-                    only_minus_ones = false;
-                }
-            }
-            if only_minus_ones {
-                break;
-            }
+    let mut left_index = 0;
+    let mut right_index = together.len() - 1;
+
+    loop {
+        if right_index == 0 {
+            break;
+        }
+        if left_index == together.len() - 1 {
+            right_index -= 1;
+            left_index = 0;
+        }
+        if together[left_index].1 != -1 {
+            left_index += 1;
+            continue;
+        }
+        if together[right_index].1 == -1 {
+            right_index -= 1;
+            continue;
+        }
+        if together[right_index].2 > together[left_index].2 {
+            left_index += 1;
+            continue;
+        }
+        if right_index < left_index {
+            right_index -= 1;
+            left_index = 0;
+            continue;
         }
 
-        if result_array[i] == -1 {
-            let mut last_number_index = 0;
-            for j in (i + 1)..result_array.len() {
-                if result_array[j] != -1 {
-                    last_number_index = j;
-                }
+        let amount_of_spaces = together[left_index].2;
+        let amount_of_numbers = together[right_index].2;
+
+        let diff = amount_of_spaces - amount_of_numbers;
+
+        together[left_index].1 = together[right_index].1;
+        together[right_index].1 = -1;
+        together[left_index].2 = together[right_index].2;
+        if diff != 0 {
+            together.insert(
+                left_index + 1,
+                (together[left_index].0 + together[left_index].2, -1, diff),
+            );
+            right_index += 1;
+        }
+        left_index = 0;
+    }
+
+    let mut result2: Vec<isize> = Vec::new();
+    for i in 0..together.len() {
+        for _ in 0..together[i].2 {
+            if together[i].1 == -1 {
+                result2.push(0);
+            } else {
+                result2.push(together[i].1);
             }
-            result_array[i] = result_array[last_number_index];
-            result_array[last_number_index] = -1;
         }
     }
 
     let mut result = 0;
-    for i in 0..result_array.len() {
-        if result_array[i] == -1 {
-            break;
-        }
-
-        result += result_array[i] as usize * i
+    for i in 0..result2.len() {
+        result += result2[i] as usize * i
     }
 
     println!("{}", result);

@@ -1,7 +1,34 @@
 use std::{fs, time::Instant};
 
 fn main() {
-    let input = fs::read_to_string("input/input1.txt").expect("Smth went wrong");
+    let input = fs::read_to_string("input/input1.txt")
+        .expect("Smth went wrong")
+        .trim_end()
+        .to_string();
+
+    let mut result_array: Vec<i32> = Vec::new();
+    // startIndex, value, amount
+    let mut together: Vec<(i32, i32, i32)> = Vec::new();
+
+    for i in 0..input.len() {
+        let n_current_char = input.chars().nth(i).unwrap().to_digit(10).unwrap() as usize;
+
+        if i % 2 == 0 {
+            together.push((
+                result_array.len() as i32,
+                i as i32 / 2,
+                n_current_char as i32,
+            ));
+            for _ in 0..n_current_char {
+                result_array.push(i as i32 / 2);
+            }
+        } else {
+            together.push((result_array.len() as i32, -1, n_current_char as i32));
+            for _ in 0..n_current_char {
+                result_array.push(-1);
+            }
+        }
+    }
 
     let start = Instant::now();
     solution_3_part1(input.trim_end().to_string());
@@ -14,36 +41,13 @@ fn main() {
     println!("Time: {:?}", duration2);
 
     let start3 = Instant::now();
-    solution_1_part2(input.trim_end().to_string());
+    let result = solution_1_part2(together);
     let duration3 = start3.elapsed();
     println!("Time: {:?}", duration3);
+    println!("{}", result);
 }
 
-fn solution_1_part2(input: String) {
-    let mut result_array: Vec<isize> = Vec::new();
-    // startIndex, value, amount
-    let mut together: Vec<(isize, isize, isize)> = Vec::new();
-
-    for i in 0..input.len() {
-        let n_current_char = input.chars().nth(i).unwrap().to_digit(10).unwrap() as usize;
-
-        if i % 2 == 0 {
-            together.push((
-                result_array.len() as isize,
-                i as isize / 2,
-                n_current_char as isize,
-            ));
-            for _ in 0..n_current_char {
-                result_array.push(i as isize / 2);
-            }
-        } else {
-            together.push((result_array.len() as isize, -1, n_current_char as isize));
-            for _ in 0..n_current_char {
-                result_array.push(-1);
-            }
-        }
-    }
-
+fn solution_1_part2(mut together: Vec<(i32, i32, i32)>) -> usize {
     let mut left_index = 0;
     let mut right_index = together.len() - 1;
 
@@ -73,10 +77,7 @@ fn solution_1_part2(input: String) {
             continue;
         }
 
-        let amount_of_spaces = together[left_index].2;
-        let amount_of_numbers = together[right_index].2;
-
-        let diff = amount_of_spaces - amount_of_numbers;
+        let diff = together[left_index].2 - together[right_index].2;
 
         together[left_index].1 = together[right_index].1;
         together[right_index].1 = -1;
@@ -91,7 +92,7 @@ fn solution_1_part2(input: String) {
         left_index = 0;
     }
 
-    let mut result2: Vec<isize> = Vec::new();
+    let mut result2: Vec<i32> = Vec::new();
     for i in 0..together.len() {
         for _ in 0..together[i].2 {
             if together[i].1 == -1 {
@@ -107,18 +108,18 @@ fn solution_1_part2(input: String) {
         result += result2[i] as usize * i
     }
 
-    println!("{}", result);
+    return result;
 }
 
 fn solution_3_part1(input: String) {
-    let mut result_array: Vec<isize> = Vec::new();
+    let mut result_array: Vec<i32> = Vec::new();
 
     for i in 0..input.len() {
         let n_current_char = input.chars().nth(i).unwrap().to_digit(10).unwrap() as usize;
 
         if i % 2 == 0 {
             for _ in 0..n_current_char {
-                result_array.push(i as isize / 2);
+                result_array.push(i as i32 / 2);
             }
         } else {
             for _ in 0..n_current_char {
@@ -127,7 +128,7 @@ fn solution_3_part1(input: String) {
         }
     }
 
-    let mut new_result_array: Vec<isize> = Vec::new();
+    let mut new_result_array: Vec<i32> = Vec::new();
     for i in 0..result_array.len() {
         if result_array[i] != -1 {
             new_result_array.push(result_array[i]);
@@ -155,14 +156,14 @@ fn solution_3_part1(input: String) {
 }
 
 fn solution_2_part1(input: String) {
-    let mut result_array: Vec<isize> = Vec::new();
+    let mut result_array: Vec<i32> = Vec::new();
 
     for i in 0..input.len() {
         let n_current_char = input.chars().nth(i).unwrap().to_digit(10).unwrap() as usize;
 
         if i % 2 == 0 {
             for _ in 0..n_current_char {
-                result_array.push(i as isize / 2);
+                result_array.push(i as i32 / 2);
             }
         } else {
             for _ in 0..n_current_char {

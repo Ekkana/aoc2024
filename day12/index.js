@@ -235,25 +235,31 @@ const part2 = (arr) => {
     ) {
       // check if they both have left or both have right
       if (
-        localVisited[verticalItemPositions[0][0]][
+        (localVisited[verticalItemPositions[0][0]][
           verticalItemPositions[0][1]
         ][1].includes("left") &&
-        localVisited[verticalItemPositions[1][0]][
-          verticalItemPositions[1][1]
-        ][1].includes("left")
-      ) {
-        bugCount++;
-      }
-      if (
-        localVisited[verticalItemPositions[0][0]][
+          localVisited[verticalItemPositions[1][0]][
+            verticalItemPositions[1][1]
+          ][1].includes("left")) ||
+        (localVisited[verticalItemPositions[0][0]][
           verticalItemPositions[0][1]
         ][1].includes("right") &&
-        localVisited[verticalItemPositions[1][0]][
-          verticalItemPositions[1][1]
-        ][1].includes("right")
+          localVisited[verticalItemPositions[1][0]][
+            verticalItemPositions[1][1]
+          ][1].includes("right"))
       ) {
         bugCount++;
       }
+      //if (
+      //  localVisited[verticalItemPositions[0][0]][
+      //    verticalItemPositions[0][1]
+      //  ][1].includes("right") &&
+      //  localVisited[verticalItemPositions[1][0]][
+      //    verticalItemPositions[1][1]
+      //  ][1].includes("right")
+      //) {
+      //  bugCount++;
+      //}
     }
 
     const horizontalItemPositions = horizontalOffsets.map(([iOff, jOff]) => [
@@ -271,25 +277,31 @@ const part2 = (arr) => {
     ) {
       // check if they both have up or both have down
       if (
-        localVisited[horizontalItemPositions[0][0]][
+        (localVisited[horizontalItemPositions[0][0]][
           horizontalItemPositions[0][1]
         ][1].includes("up") &&
-        localVisited[horizontalItemPositions[1][0]][
-          horizontalItemPositions[1][0]
-        ][1].includes("up")
-      ) {
-        bugCount++;
-      }
-      if (
-        localVisited[horizontalItemPositions[0][0]][
+          localVisited[horizontalItemPositions[1][0]][
+            horizontalItemPositions[1][0]
+          ][1].includes("up")) ||
+        (localVisited[horizontalItemPositions[0][0]][
           horizontalItemPositions[0][1]
         ][1].includes("down") &&
-        localVisited[horizontalItemPositions[1][0]][
-          horizontalItemPositions[1][0]
-        ][1].includes("down")
+          localVisited[horizontalItemPositions[1][0]][
+            horizontalItemPositions[1][0]
+          ][1].includes("down"))
       ) {
         bugCount++;
       }
+      //if (
+      //  localVisited[horizontalItemPositions[0][0]][
+      //    horizontalItemPositions[0][1]
+      //  ][1].includes("down") &&
+      //  localVisited[horizontalItemPositions[1][0]][
+      //    horizontalItemPositions[1][0]
+      //  ][1].includes("down")
+      //) {
+      //  bugCount++;
+      //}
     }
 
     return bugCount;

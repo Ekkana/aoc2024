@@ -45,7 +45,7 @@ function part2() {
       currentInstruction += 2;
     },
     1: (a) => {
-      regB = (regB ^ a) >>> 0;
+      regB = (regB ^ a) & 7;
       currentInstruction += 2;
     },
     2: (a) => {
@@ -55,7 +55,7 @@ function part2() {
     3: (a) =>
       regA === 0 ? (currentInstruction += 2) : (currentInstruction = a),
     4: () => {
-      regB = (regB ^ regC) >>> 0;
+      regB = (regB ^ regC) & 7;
       currentInstruction += 2;
     },
     5: (a) => {

@@ -15,6 +15,7 @@ function part2_sol3() {
     visited = {},
   ) => {
     if (typeof visited[currentStr] !== "undefined") {
+      console.log("returning from visited", currentStr, visited[currentStr]);
       return visited[currentStr];
     }
 
@@ -33,6 +34,7 @@ function part2_sol3() {
       total += canCombine(target, towels, newStr, count, visited);
     }
 
+    console.log("adding to visited", currentStr, total);
     visited[currentStr] = total;
 
     return total;
@@ -40,8 +42,10 @@ function part2_sol3() {
 
   let count = 0;
 
-  for (let i = 0; i < target.length; i++) {
+  for (let i = 0; i < 2; i++) {
     let data = canCombine(target[i], towels);
+    console.log("-------------------");
+    console.log(data);
     count += data;
   }
 

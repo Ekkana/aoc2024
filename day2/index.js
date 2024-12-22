@@ -1,8 +1,6 @@
-import input from "./input.js";
+import input from './input.js';
 
-const formattedInput = input
-    .split("\n")
-    .map((line) => line.split(" ").map((num) => parseInt(num)));
+const formattedInput = input.split('\n').map((line) => line.split(' ').map((num) => parseInt(num)));
 
 let validLines1 = 0;
 
@@ -19,10 +17,7 @@ formattedInput.forEach((line) => {
             break;
         }
 
-        if (
-            Math.abs(line[i] - line[i - 1]) < 1 ||
-            Math.abs(line[i] - line[i - 1]) > 3
-        ) {
+        if (Math.abs(line[i] - line[i - 1]) < 1 || Math.abs(line[i] - line[i - 1]) > 3) {
             isSafe = false;
             break;
         }
@@ -61,7 +56,7 @@ formattedInput.forEach((line) => {
             Math.abs(line[i] - line[i + 1]) > 3
         ) {
             if (hasJumped === true) {
-                console.log("Already Jumped");
+                console.log('Already Jumped');
                 isSafe = false;
                 break;
             }
@@ -78,17 +73,17 @@ formattedInput.forEach((line) => {
                         Math.abs(line[i] - line[i + 2]) < 1 ||
                         Math.abs(line[i] - line[i + 2]) > 3
                     ) {
-                        console.log("Start Over Abort");
+                        console.log('Start Over Abort');
                         isSafe = false;
                         break;
                     } else {
-                        console.log("Start Jumping Over");
+                        console.log('Start Jumping Over');
                         hasJumped = true;
                         i += 1;
                         continue;
                     }
                 } else {
-                    console.log("Start Jumping");
+                    console.log('Start Jumping');
                     hasJumped = true;
                     continue;
                 }
@@ -96,7 +91,7 @@ formattedInput.forEach((line) => {
 
             // if we are at the end:
             if (i === line.length - 2) {
-                console.log("End Jumping");
+                console.log('End Jumping');
                 hasJumped = true;
                 continue;
             }
@@ -113,11 +108,11 @@ formattedInput.forEach((line) => {
                         Math.abs(line[i] - line[i + 2]) < 1 ||
                         Math.abs(line[i] - line[i + 2]) > 3
                     ) {
-                        console.log("Middle Over Abort");
+                        console.log('Middle Over Abort');
                         isSafe = false;
                         break;
                     } else {
-                        console.log("Middle Jumping Over");
+                        console.log('Middle Jumping Over');
                         hasJumped = true;
                         i += 1;
                         continue;
@@ -129,11 +124,11 @@ formattedInput.forEach((line) => {
                         Math.abs(line[i] - line[i + 2]) > 3
                     ) {
                         console.log(line[i - 1], line[i + 1]);
-                        console.log("Middle Jumping");
+                        console.log('Middle Jumping');
                         hasJumped = true;
                         continue;
                     } else {
-                        console.log("Middle Jumping Over");
+                        console.log('Middle Jumping Over');
                         hasJumped = true;
                         i += 1;
                         continue;

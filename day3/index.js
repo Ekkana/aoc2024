@@ -1,10 +1,7 @@
-const path = require("path");
-const fs = require("fs");
+const path = require('path');
+const fs = require('fs');
 
-const input = fs
-    .readFileSync(path.join(__dirname, "input.txt"), "utf8")
-    .toString()
-    .trim();
+const input = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8').toString().trim();
 
 const regex = /mul\((\d+),(\d+)\)/g;
 
@@ -24,7 +21,7 @@ const matchesStart = input.match(regToFirstDo);
 const otherMatches = input.match(regFromFirstDo);
 const matchesEnd = input.matchAll(regAfterLastDo);
 
-let combinedToString = matchesStart[0] + otherMatches.join("");
+let combinedToString = matchesStart[0] + otherMatches.join('');
 for (const match of matchesEnd) {
     combinedToString += match[1];
 }

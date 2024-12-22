@@ -1,16 +1,13 @@
-const path = require("path");
-const fs = require("fs");
+const path = require('path');
+const fs = require('fs');
 
-const input = fs
-    .readFileSync(path.join(__dirname, "input1.txt"), "utf8")
-    .toString()
-    .trim();
+const input = fs.readFileSync(path.join(__dirname, 'input1.txt'), 'utf8').toString().trim();
 
-const robots = input.split("\n");
+const robots = input.split('\n');
 const numbers = robots.map((robot) => {
-    let [x, y] = robot.split(" ")[0].split("=")[1].split(",");
+    let [x, y] = robot.split(' ')[0].split('=')[1].split(',');
 
-    let [offsetX, offsetY] = robot.split(" ")[1].split("=")[1].split(",");
+    let [offsetX, offsetY] = robot.split(' ')[1].split('=')[1].split(',');
 
     return {
         x: parseInt(y),
@@ -61,17 +58,17 @@ const part2 = (steps, mapSize) => {
         }
     }
 
-    let outputStr = "";
+    let outputStr = '';
     for (let i = 0; i < newPositions.length; i++) {
         const line = [];
         for (let j = 0; j < newPositions[i].length; j++) {
             if (newPositions[i][j]) {
                 line.push(newPositions[i][j]);
             } else {
-                line.push(".");
+                line.push('.');
             }
         }
-        outputStr += line.join("") + "\n";
+        outputStr += line.join('') + '\n';
     }
     return outputStr;
 };
@@ -123,7 +120,7 @@ const part1 = (steps, mapSize) => {
             if (newPositions[i][j]) {
                 line.push(newPositions[i][j]);
             } else {
-                line.push(".");
+                line.push('.');
             }
         }
     }
@@ -166,17 +163,17 @@ const part1 = (steps, mapSize) => {
 //part1(100, { x: 101, y: 103 });
 //part2(100, { x: 101, y: 103 });
 
-let str = "";
+let str = '';
 for (let i = 10000; i < 20000; i++) {
-    str += i + "\n";
+    str += i + '\n';
     const data = part2(i, { x: 101, y: 103 });
     str += data;
 }
 
-fs.writeFile("output3.txt", str, (err) => {
+fs.writeFile('output3.txt', str, (err) => {
     if (err) {
-        console.error("Error writing file:", err);
+        console.error('Error writing file:', err);
     } else {
-        console.log("File written successfully.");
+        console.log('File written successfully.');
     }
 });

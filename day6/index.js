@@ -1,16 +1,13 @@
-const path = require("path");
-const fs = require("fs");
+const path = require('path');
+const fs = require('fs');
 
-const input = fs
-    .readFileSync(path.join(__dirname, "input1.txt"), "utf8")
-    .toString()
-    .trim();
+const input = fs.readFileSync(path.join(__dirname, 'input1.txt'), 'utf8').toString().trim();
 
-const splitLines = input.split("\n");
-const arr = splitLines.map((line) => line.split(""));
+const splitLines = input.split('\n');
+const arr = splitLines.map((line) => line.split(''));
 
-const startSymbol = "^";
-const wallSymbol = "#";
+const startSymbol = '^';
+const wallSymbol = '#';
 const directions = {
     up: [-1, 0],
     down: [1, 0],
@@ -28,24 +25,24 @@ const getStartingPosition = (arr) => {
     return [-1, -1];
 };
 const getNewDirection = (currentDirection) => {
-    if (currentDirection === "up") {
-        return "right";
+    if (currentDirection === 'up') {
+        return 'right';
     }
-    if (currentDirection === "right") {
-        return "down";
+    if (currentDirection === 'right') {
+        return 'down';
     }
-    if (currentDirection === "down") {
-        return "left";
+    if (currentDirection === 'down') {
+        return 'left';
     }
-    return "up";
+    return 'up';
 };
 
 // Part 1
-let currentDirection = "up";
+let currentDirection = 'up';
 const visited = new Set();
 let [row, col] = getStartingPosition(arr);
 
-console.time("time");
+console.time('time');
 while (true) {
     const newRow = row + directions[currentDirection][0];
     const newCol = col + directions[currentDirection][1];
@@ -61,7 +58,7 @@ while (true) {
         visited.add(`${row},${col}`);
     }
 }
-console.timeEnd("time");
+console.timeEnd('time');
 
 console.log(visited.size);
 
@@ -69,11 +66,11 @@ console.log(visited.size);
 let [startRow, startCol] = getStartingPosition(arr);
 let potentialNewCorners = 0;
 
-console.time("time");
+console.time('time');
 
 for (let i = 0; i < arr.length; i++) {
     for (let k = 0; k < arr[i].length; k++) {
-        let currentDirection2 = "up";
+        let currentDirection2 = 'up';
         const corners = new Set();
         const newWallPosition = [i, k];
         let row2 = startRow;
@@ -105,6 +102,6 @@ for (let i = 0; i < arr.length; i++) {
     }
 }
 
-console.timeEnd("time");
+console.timeEnd('time');
 
 console.log(potentialNewCorners);

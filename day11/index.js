@@ -1,12 +1,9 @@
-const path = require("path");
-const fs = require("fs");
+const path = require('path');
+const fs = require('fs');
 
-const input = fs
-    .readFileSync(path.join(__dirname, "input1.txt"), "utf8")
-    .toString()
-    .trim();
+const input = fs.readFileSync(path.join(__dirname, 'input1.txt'), 'utf8').toString().trim();
 
-const arr = input.split(" ").map((x) => parseInt(x));
+const arr = input.split(' ').map((x) => parseInt(x));
 
 console.log(arr);
 
@@ -139,6 +136,6 @@ const arrayProcessor = async (arr) => {
     return newArr;
 };
 
-console.time("part1");
+console.time('part1');
 part1_sol3(arr);
-console.timeEnd("part1");
+console.timeEnd('part1');

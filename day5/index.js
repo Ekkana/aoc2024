@@ -1,18 +1,12 @@
-const path = require("path");
-const fs = require("fs");
+const path = require('path');
+const fs = require('fs');
 
-const inputRules = fs
-    .readFileSync(path.join(__dirname, "input1.txt"), "utf8")
-    .toString()
-    .trim();
+const inputRules = fs.readFileSync(path.join(__dirname, 'input1.txt'), 'utf8').toString().trim();
 
-const inputRecord = fs
-    .readFileSync(path.join(__dirname, "input2.txt"), "utf8")
-    .toString()
-    .trim();
+const inputRecord = fs.readFileSync(path.join(__dirname, 'input2.txt'), 'utf8').toString().trim();
 
-const rulesSplitLines = inputRules.split("\n");
-const rulesArr = rulesSplitLines.map((line) => line.split("|"));
+const rulesSplitLines = inputRules.split('\n');
+const rulesArr = rulesSplitLines.map((line) => line.split('|'));
 const rulesObj = rulesArr.reduce((acc, rule) => {
     const [key, value] = rule;
     if (!acc[value]) {
@@ -22,8 +16,8 @@ const rulesObj = rulesArr.reduce((acc, rule) => {
     return acc;
 }, {});
 
-const recordSplitLines = inputRecord.split("\n");
-const recordArr = recordSplitLines.map((line) => line.split(","));
+const recordSplitLines = inputRecord.split('\n');
+const recordArr = recordSplitLines.map((line) => line.split(','));
 
 const successArray = [];
 const failArray = [];

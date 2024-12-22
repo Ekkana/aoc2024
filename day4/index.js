@@ -1,16 +1,13 @@
-const path = require("path");
-const fs = require("fs");
+const path = require('path');
+const fs = require('fs');
 
-const input = fs
-    .readFileSync(path.join(__dirname, "input.txt"), "utf8")
-    .toString()
-    .trim();
+const input = fs.readFileSync(path.join(__dirname, 'input.txt'), 'utf8').toString().trim();
 
-const splitLines = input.split("\n");
-const arr = splitLines.map((line) => line.split(""));
+const splitLines = input.split('\n');
+const arr = splitLines.map((line) => line.split(''));
 
 // Part 1
-const word = "XMAS";
+const word = 'XMAS';
 const directions = {
     down: [
         [0, 1],
@@ -97,14 +94,14 @@ const directions2 = {
         [1, -1],
     ],
 };
-const center = "A";
-const word2 = "MS";
+const center = 'A';
+const word2 = 'MS';
 
 const checkDirections2 = (i, k) => {
     let numberOfWords = 0;
 
     for (let direction in directions2) {
-        let newWord = "";
+        let newWord = '';
         for (let j = 0; j < directions2[direction].length; j++) {
             const x = i + directions2[direction][j][0];
             const y = k + directions2[direction][j][1];
@@ -114,7 +111,7 @@ const checkDirections2 = (i, k) => {
             }
         }
 
-        if (newWord === word2 || newWord === word2.split("").reverse().join("")) {
+        if (newWord === word2 || newWord === word2.split('').reverse().join('')) {
             numberOfWords++;
         }
     }

@@ -134,48 +134,78 @@ function part1() {
             path[i].push(numericPath);
         }
     }
-    console.log(path);
 
-    const isValidPath = (line) => {};
+    const isValidPath = (line, start) => {
+        let curPoint = [...start];
+
+        for (let i = 0; i < line.length; i++) {
+            const dir = line[i];
+            const [dx, dy] = DIRECTIONS[dir];
+            const [x, y] = curPoint;
+            const newX = x + dx;
+            const newY = y + dy;
+
+            if (
+                typeof numericKeyPad[newX] === 'undefined' ||
+                typeof numericKeyPad[newX][newY] === 'undefined'
+            ) {
+                return false;
+            }
+            curPoint = [newX, newY];
+        }
+        return true;
+    };
 
     //sort it
     for (let i = 0; i < path.length; i++) {
         const line = path[i];
         for (let j = 0; j < line.length; j++) {
             path[i][j] = path[i][j].sort((a, b) => {
-                if (j == 0) {
-                    const order = ['Right', 'Down', 'Up', 'Left'];
-                    return order.indexOf(a) - order.indexOf(b);
-                }
                 const order = ['Left', 'Down', 'Up', 'Right'];
                 return order.indexOf(a) - order.indexOf(b);
             });
+
+            const startNodeSymbol = j === 0 ? 'A' : numericInput[i][j - 1];
+            let startNodeIndex = [3, 2];
+
+            if (j !== 0) {
+                for (let x = 0; x < numericKeyPad.length; x++) {
+                    for (let y = 0; y < numericKeyPad[x].length; y++) {
+                        if (
+                            parseNumericInput(numericKeyPad[x][y]) ==
+                            parseNumericInput(startNodeSymbol)
+                        ) {
+                            startNodeIndex = [x, y];
+                        }
+                    }
+                }
+            }
+
+            if (!isValidPath(path[i][j], startNodeIndex)) {
+                path[i][j] = path[i][j].sort((a, b) => {
+                    const order = ['Right', 'Down', 'Up', 'Left'];
+                    return order.indexOf(a) - order.indexOf(b);
+                });
+            }
         }
     }
-    console.log(path);
 
     const pathOnArrowPad1 = [];
-    //for (const line of path) {
     for (let i = 0; i < path.length; i++) {
         const line = path[i];
         pathOnArrowPad1.push([]);
         let start = 'A';
 
         for (const path of line) {
-            //console.log("Full path: ", path);
             for (const move of path) {
-                //console.log("Moving from to ", start + "|" + move);
                 if (start !== move) {
-                    //console.log(pathsLookup[start + "|" + move]);
                     pathOnArrowPad1[i].push(pathsLookup[start + '|' + move]);
                     pathOnArrowPad1[i].push(['A']);
                     start = move;
                 } else {
-                    //console.log("Clicking A");
                     pathOnArrowPad1[i].push(['A']);
                 }
             }
-            //console.log("Clicking A - end of path");
             pathOnArrowPad1[i].push(pathsLookup[start + '|A']);
             pathOnArrowPad1[i].push(['A']);
 
@@ -183,61 +213,32 @@ function part1() {
         }
         pathOnArrowPad1[i] = pathOnArrowPad1[i].flat();
     }
-    //console.log(pathOnArrowPad1);
-    //console.log("Path on arrow pad 1");
-    //console.log(pathOnArrowPad1);
 
     const pathOnArrowPad2 = [];
-    //for (const line of path) {
     for (let i = 0; i < pathOnArrowPad1.length; i++) {
         const line = pathOnArrowPad1[i];
         pathOnArrowPad2.push([]);
-        //console.log("Line: ", line);
         let start = 'A';
 
         for (const move of line) {
-            //for (const move of path) {
-            //console.log("Moving from to ", start + "|" + move);
             if (start !== move) {
-                //console.log(pathsLookup2[start + "|" + move]);
-
                 pathOnArrowPad2[i].push(pathsLookup2[start + '|' + move]);
-                //pathOnArrowPad2[i].push(["A"]);
                 start = move;
             } else {
-                //console.log("Clicking A");
                 pathOnArrowPad2[i].push(['A']);
             }
-            //}
-            //console.log("Clicking A - end of path");
-            //pathOnArrowPad2[i].push(pathsLookup[start + "|A"]);
-            //pathOnArrowPad2[i].push(["A"]);
-            //
-            //start = "A";
         }
         pathOnArrowPad2[i] = pathOnArrowPad2[i].flat();
     }
-    //console.log("Path on arrow pad 2");
-    //console.log(pathOnArrowPad2);
-    //console.log(pathOnArrowPad2.length);
-    for (let i = 0; i < pathOnArrowPad2.length; i++) {
-        console.log(pathOnArrowPad2[i].length);
-    }
+
     const numbers = [];
-
     for (const line of numericInput) {
-        // number is 012A
-        // need to get 12
-
         numbers.push(line.match(/\d+/g).map(Number));
     }
-    console.log(numbers);
 
     let res = 0;
-
     for (let i = 0; i < pathOnArrowPad2.length; i++) {
         const num = numbers[i] * pathOnArrowPad2[i].length;
-        console.log('Number: ', num);
         res += num;
     }
     console.log(res);

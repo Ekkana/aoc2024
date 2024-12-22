@@ -68,6 +68,203 @@ const DIRECTIONS = {
 };
 
 part1();
+part2();
+
+function part2() {
+    const numericInput = parseInput('input1.txt');
+
+    const findNumericPath = (start, end) => {
+        const queue = [[start[0], start[1], []]];
+        const visited = new Set();
+
+        while (queue.length > 0) {
+            const [x, y, path] = queue.shift();
+            const key = `${x},${y}`;
+
+            if (
+                typeof numericKeyPad[x] === 'undefined' ||
+                typeof numericKeyPad[x][y] === 'undefined' ||
+                visited.has(key)
+            ) {
+                continue;
+            }
+
+            //console.log(x, y, path, end);
+            if (x === end[0] && y === end[1]) {
+                return path;
+            }
+
+            visited.add(key);
+
+            for (const [direction, [dx, dy]] of Object.entries(DIRECTIONS)) {
+                const newX = x + dx;
+                const newY = y + dy;
+
+                const newPath = [...path, direction];
+                queue.push([newX, newY, newPath]);
+            }
+        }
+    };
+
+    const parseNumericInput = (letter) => {
+        if (letter === 'A') {
+            return 'A';
+        }
+        return parseInt(letter);
+    };
+    const findIndex = (keyPad, value) => {
+        for (let i = 0; i < keyPad.length; i++) {
+            for (let j = 0; j < keyPad[i].length; j++) {
+                if (keyPad[i][j] == value) {
+                    return [i, j];
+                }
+            }
+        }
+    };
+
+    const path = [];
+    for (let i = 0; i < numericInput.length; i++) {
+        path.push([]);
+        for (let j = 0; j < numericInput[i].length; j++) {
+            const numericPath = findNumericPath(
+                j === 0
+                    ? numericKeyPadStart
+                    : findIndex(numericKeyPad, parseNumericInput(numericInput[i][j - 1])),
+                findIndex(numericKeyPad, parseNumericInput(numericInput[i][j])),
+            );
+            path[i].push(numericPath);
+        }
+    }
+
+    const isValidPath = (line, start) => {
+        let curPoint = [...start];
+
+        for (let i = 0; i < line.length; i++) {
+            const dir = line[i];
+            const [dx, dy] = DIRECTIONS[dir];
+            const [x, y] = curPoint;
+            const newX = x + dx;
+            const newY = y + dy;
+
+            if (
+                typeof numericKeyPad[newX] === 'undefined' ||
+                typeof numericKeyPad[newX][newY] === 'undefined'
+            ) {
+                return false;
+            }
+            curPoint = [newX, newY];
+        }
+        return true;
+    };
+
+    //sort it
+    for (let i = 0; i < path.length; i++) {
+        const line = path[i];
+        for (let j = 0; j < line.length; j++) {
+            path[i][j] = path[i][j].sort((a, b) => {
+                const order = ['Left', 'Down', 'Up', 'Right'];
+                return order.indexOf(a) - order.indexOf(b);
+            });
+
+            const startNodeSymbol = j === 0 ? 'A' : numericInput[i][j - 1];
+            let startNodeIndex = [3, 2];
+
+            if (j !== 0) {
+                for (let x = 0; x < numericKeyPad.length; x++) {
+                    for (let y = 0; y < numericKeyPad[x].length; y++) {
+                        if (
+                            parseNumericInput(numericKeyPad[x][y]) ==
+                            parseNumericInput(startNodeSymbol)
+                        ) {
+                            startNodeIndex = [x, y];
+                        }
+                    }
+                }
+            }
+
+            if (!isValidPath(path[i][j], startNodeIndex)) {
+                path[i][j] = path[i][j].sort((a, b) => {
+                    const order = ['Right', 'Down', 'Up', 'Left'];
+                    return order.indexOf(a) - order.indexOf(b);
+                });
+            }
+        }
+    }
+
+    const pathOnArrowPad1 = [];
+    for (let i = 0; i < path.length; i++) {
+        const line = path[i];
+        pathOnArrowPad1.push([]);
+        let start = 'A';
+
+        for (const path of line) {
+            for (const move of path) {
+                if (start !== move) {
+                    pathOnArrowPad1[i].push(pathsLookup[start + '|' + move]);
+                    pathOnArrowPad1[i].push(['A']);
+                    start = move;
+                } else {
+                    pathOnArrowPad1[i].push(['A']);
+                }
+            }
+            pathOnArrowPad1[i].push(pathsLookup[start + '|A']);
+            pathOnArrowPad1[i].push(['A']);
+
+            start = 'A';
+        }
+        pathOnArrowPad1[i] = pathOnArrowPad1[i].flat();
+    }
+
+    const cache = {};
+
+    const getPath = (previousPath) => {
+        const newPath = [];
+        for (let i = 0; i < previousPath.length; i++) {
+            const line = previousPath[i];
+
+            newPath.push([]);
+            let start = 'A';
+            let out = [];
+
+            const key = `${line.join('|')}`;
+
+            if (cache[key]) {
+                out = cache[key];
+            } else {
+                for (const move of line) {
+                    if (start !== move) {
+                        out.push(pathsLookup2[start + '|' + move]);
+                        start = move;
+                    } else {
+                        out.push('A');
+                    }
+                }
+                cache[key] = out.flat();
+            }
+
+            newPath[i].push(out.flat());
+            newPath[i] = newPath[i].flat();
+        }
+        return newPath;
+    };
+
+    let endPath = [...pathOnArrowPad1];
+    for (let i = 0; i < 1; i++) {
+        endPath = getPath(endPath);
+    }
+
+    const numbers = [];
+    for (const line of numericInput) {
+        numbers.push(line.match(/\d+/g).map(Number));
+    }
+
+    let res = 0;
+    for (let i = 0; i < endPath.length; i++) {
+        const num = numbers[i] * endPath[i].length;
+        res += num;
+    }
+    console.log(res);
+}
 
 function part1() {
     const numericInput = parseInput('input1.txt');

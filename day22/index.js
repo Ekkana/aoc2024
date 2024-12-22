@@ -5,7 +5,9 @@ const input = parseInput("input1.txt");
 const PRUNE_MOD = 16777216;
 
 part1();
+console.time("Part2");
 part2();
+console.timeEnd("Part2");
 
 function part2() {
   const prune = (value) => value % PRUNE_MOD;

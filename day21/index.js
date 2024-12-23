@@ -215,43 +215,98 @@ function part2() {
         pathOnArrowPad1[i] = pathOnArrowPad1[i].flat();
     }
 
+    //const cache = {};
+    //const getPath = (previousPath) => {
+    //    const newPath = [];
+    //    for (let i = 0; i < previousPath.length; i++) {
+    //        const line = previousPath[i];
+    //
+    //        newPath.push([]);
+    //        let start = 'A';
+    //        let out = [];
+    //
+    //        const key = `${line.join('|')}`;
+    //
+    //        if (cache[key]) {
+    //            out = cache[key];
+    //        } else {
+    //            for (const move of line) {
+    //                if (start !== move) {
+    //                    out.push(pathsLookup2[start + '|' + move]);
+    //                    start = move;
+    //                } else {
+    //                    out.push('A');
+    //                }
+    //            }
+    //            cache[key] = out.flat();
+    //        }
+    //
+    //        newPath[i].push(out.flat());
+    //        newPath[i] = newPath[i].flat();
+    //    }
+    //    return newPath;
+    //};
+    //
+    //let endPath = [...pathOnArrowPad1];
+    //for (let i = 0; i < 1; i++) {
+    //    endPath = getPath(endPath);
+    //}
+
     const cache = {};
-
-    const getPath = (previousPath) => {
-        const newPath = [];
-        for (let i = 0; i < previousPath.length; i++) {
-            const line = previousPath[i];
-
-            newPath.push([]);
-            let start = 'A';
-            let out = [];
-
-            const key = `${line.join('|')}`;
-
-            if (cache[key]) {
-                out = cache[key];
-            } else {
-                for (const move of line) {
-                    if (start !== move) {
-                        out.push(pathsLookup2[start + '|' + move]);
-                        start = move;
-                    } else {
-                        out.push('A');
-                    }
-                }
-                cache[key] = out.flat();
-            }
-
-            newPath[i].push(out.flat());
-            newPath[i] = newPath[i].flat();
+    const getPath = (initialPath, targetDepth, previousPath, start, curDepth = 0) => {
+        if (curDepth === targetDepth) {
+            return previousPath;
         }
-        return newPath;
+
+        const key = previousPath.join('|');
+
+        if (cache[key]) {
+            console.log('hit');
+            return cache[key];
+        }
+
+        let newPath = [];
+
+        let start2 = start;
+
+        //console.log('start', start);
+        //console.log('start2', start2);
+        for (const move of previousPath) {
+            if (start2 !== move) {
+                //console.log(start, move);
+                //console.log(pathsLookup2[start2 + '|' + move]);
+                newPath.push(pathsLookup2[start2 + '|' + move]);
+                start2 = move;
+            } else {
+                newPath.push('A');
+            }
+        }
+
+        cache[key] = newPath.flat();
+        newPath = cache[key];
+        console.log(curDepth);
+
+        return getPath(initialPath, targetDepth, newPath, start2, curDepth + 1);
     };
 
     let endPath = [...pathOnArrowPad1];
-    for (let i = 0; i < 1; i++) {
-        endPath = getPath(endPath);
+    const res2 = [];
+    const depth = 24;
+    //console.log('endPath', endPath);
+    for (let i = 0; i < endPath.length; i++) {
+        res2.push([]);
+        for (let j = 0; j < endPath[i].length; j++) {
+            const start = j === 0 ? 'A' : endPath[i][j - 1];
+            const test = getPath(endPath[i][j], depth, [endPath[i][j]], start);
+            //console.log('inpu', endPath[i][j]);
+            //console.log('test', test);
+            console.log(j);
+            res2[i].push(test);
+        }
+        endPath[i] = res2[i].flat();
+        endPath[i] = endPath[i].flat();
     }
+    //console.log(endPath);
 
     const numbers = [];
     for (const line of numericInput) {
@@ -428,6 +483,7 @@ function part1() {
         pathOnArrowPad2[i] = pathOnArrowPad2[i].flat();
     }
 
+    console.log(pathOnArrowPad2);
     const numbers = [];
     for (const line of numericInput) {
         numbers.push(line.match(/\d+/g).map(Number));
